@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -34,7 +33,6 @@ const FolderView = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Mock data - in a real app these would come from API or state
   const folders = [
     { id: '1', name: 'ChatGPT Templates', description: 'Prompts for ChatGPT', shared: false },
     { id: '2', name: 'Claude Prompts', description: 'Prompts for Claude AI', shared: true },
@@ -78,10 +76,8 @@ const FolderView = () => {
     },
   ];
   
-  // Find current folder
   const currentFolder = folders.find(f => f.id === folderId);
   
-  // Filter prompts by search query
   const filteredPrompts = searchQuery
     ? prompts.filter(p => 
         p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

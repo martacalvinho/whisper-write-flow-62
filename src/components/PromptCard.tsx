@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   FileText, 
@@ -23,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
 import { usePromptDetailModal } from '@/hooks/usePromptDetailModal';
+import { useNavigate } from 'react-router-dom';
 
 export interface Prompt {
   id: string;
@@ -41,6 +41,7 @@ interface PromptCardProps {
 const PromptCard: React.FC<PromptCardProps> = ({ prompt, className }) => {
   const { toast } = useToast();
   const { openPromptDetail } = usePromptDetailModal();
+  const navigate = useNavigate();
   
   const getPlatformColor = (platform: string) => {
     switch (platform) {
@@ -77,10 +78,16 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, className }) => {
   
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toast({ 
-      title: "Edit Prompt", 
-      description: "This would open the prompt editor" 
+    navigate('/new-prompt', { state: { prompt } });
+  };
+  
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast({
+      title: "Share Prompt",
+      description: "Opening share dialog...",
     });
+    // In a real app, this would open a share dialog
   };
   
   const handleCardClick = () => {
@@ -90,7 +97,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, className }) => {
   return (
     <div 
       className={cn(
-        "prompt-card flex flex-col p-3 border rounded-lg cursor-pointer hover:shadow-md transition-shadow", 
+        "prompt-card flex flex-col p-4 border rounded-lg cursor-pointer hover:shadow-md transition-shadow",
         className
       )}
       onClick={handleCardClick}
@@ -160,10 +167,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, className }) => {
                 <PencilLine className="mr-2 h-3.5 w-3.5" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => {
-                e.stopPropagation();
-                toast({ title: "Share", description: "Share prompt dialog would open" });
-              }}>
+              <DropdownMenuItem onClick={handleShare}>
                 <Share2 className="mr-2 h-3.5 w-3.5" />
                 <span>Share</span>
               </DropdownMenuItem>

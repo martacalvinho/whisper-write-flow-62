@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import FolderGrid from '@/components/FolderGrid';
@@ -115,7 +114,7 @@ const Index = () => {
               </div>
               
               <TabsContent value="all" className="mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {prompts.map((prompt) => (
                     <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
                   ))}
@@ -123,7 +122,7 @@ const Index = () => {
               </TabsContent>
               
               <TabsContent value="recent" className="mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {recentPrompts.map((prompt) => (
                     <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
                   ))}
@@ -131,7 +130,7 @@ const Index = () => {
               </TabsContent>
               
               <TabsContent value="favorites" className="mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {favoritedPrompts.map((prompt) => (
                     <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
                   ))}

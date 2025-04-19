@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -28,6 +27,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { id: '3', name: 'Gemini', count: 5, shared: false },
   ];
 
+  const handleNewFolder = () => {
+    toast({
+      title: "Create New Folder",
+      description: "Opening folder creation dialog...",
+    });
+    // In a real app, this would open a folder creation dialog
+  };
+  
   return (
     <div className={cn(
       "fixed inset-y-0 left-0 z-30 w-48 flex flex-col bg-card border-r",
@@ -80,10 +87,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
           variant="outline" 
           size="sm" 
           className="w-full justify-start text-xs" 
-          onClick={() => navigate('/new-prompt')}
+          onClick={handleNewFolder}
         >
-          <Plus className="mr-2 h-3 w-3" />
-          New Prompt
+          <FolderPlus className="mr-2 h-3 w-3" />
+          New Folder
         </Button>
       </div>
     </div>
