@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 import { PromptDetailProvider } from "./hooks/usePromptDetailModal";
 import PromptDetailModal from "./components/PromptDetailModal";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +27,7 @@ const App = () => (
               <Route path="/new-prompt" element={<NewPrompt />} />
               <Route path="/folder/:folderId" element={<FolderView />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
