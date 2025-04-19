@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
-import FolderGrid from '@/components/FolderGrid';
-import PromptCard, { Prompt } from '@/components/PromptCard';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, FolderPlus } from 'lucide-react';
+import { Plus, FolderPlus, Search, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PromptCard, { Prompt } from '@/components/PromptCard';
+import FolderGrid from '@/components/FolderGrid';
+import { Badge } from '@/components/ui/badge';
 
 const Index = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   
   // Mock data - in a real app this would come from API or state management
   const folders = [
@@ -70,9 +73,31 @@ const Index = () => {
       aiPlatforms: ['chatgpt', 'claude'],
     },
   ];
-  
-  const recentPrompts = prompts.slice(0, 3);
-  const favoritedPrompts = prompts.filter(p => p.favorited);
+
+  // Get all unique tags from prompts
+  const allTags = Array.from(
+    new Set(prompts.flatMap(prompt => prompt.tags))
+  ).sort();
+
+  // Filter prompts based on search query and selected tags
+  const filteredPrompts = prompts.filter(prompt => {
+    const matchesSearch = searchQuery.toLowerCase() === '' || 
+      prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prompt.content.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesTags = selectedTags.length === 0 || 
+      selectedTags.every(tag => prompt.tags.includes(tag));
+
+    return matchesSearch && matchesTags;
+  });
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
   
   return (
     <MainLayout>
@@ -95,50 +120,58 @@ const Index = () => {
             </Button>
           </div>
         </div>
-        
-        <div className="grid gap-6">
-          <div>
-            <h3 className="text-lg font-medium mb-3">Folders</h3>
-            <FolderGrid folders={folders} />
+
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search prompts..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
-          
-          <div>
-            <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-medium">Prompts</h3>
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="recent">Recent</TabsTrigger>
-                  <TabsTrigger value="favorites">Favorites</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <TabsContent value="all" className="mt-0">
-                <div className="grid grid-cols-1 gap-4">
-                  {prompts.map((prompt) => (
-                    <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
-                  ))}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="recent" className="mt-0">
-                <div className="grid grid-cols-1 gap-4">
-                  {recentPrompts.map((prompt) => (
-                    <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
-                  ))}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="favorites" className="mt-0">
-                <div className="grid grid-cols-1 gap-4">
-                  {favoritedPrompts.map((prompt) => (
-                    <PromptCard key={prompt.id} prompt={prompt} className="animate-slide-up-delay-1" />
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
+
+          <div className="flex flex-wrap gap-2">
+            {allTags.map(tag => (
+              <Badge
+                key={tag}
+                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => toggleTag(tag)}
+              >
+                <Tag className="mr-1 h-3 w-3" />
+                {tag}
+              </Badge>
+            ))}
           </div>
         </div>
+        
+        <Tabs defaultValue="folders" className="w-full">
+          <TabsList>
+            <TabsTrigger value="folders">Folders</TabsTrigger>
+            <TabsTrigger value="prompts">Prompts</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="folders" className="mt-6">
+            <FolderGrid folders={folders} />
+          </TabsContent>
+          
+          <TabsContent value="prompts" className="mt-6">
+            <div className="space-y-4">
+              {filteredPrompts.map((prompt) => (
+                <PromptCard 
+                  key={prompt.id} 
+                  prompt={prompt}
+                  className="w-full"
+                />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </MainLayout>
   );
