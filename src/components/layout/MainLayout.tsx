@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import Sidebar from './Sidebar';
@@ -11,7 +10,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   
   // Toggle command palette with Cmd+Shift+P
@@ -33,17 +32,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }, [showCommandPalette]);
   
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+    <div className="flex h-[600px] w-[400px] overflow-hidden bg-background text-foreground">
+      {sidebarOpen && (
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      )}
       
-      <div className={cn(
-        "flex flex-col flex-1 w-0 overflow-hidden transition-all duration-300",
-        sidebarOpen ? "ml-64" : "ml-0"
-      )}>
+      <div className="flex flex-col flex-1 w-0 overflow-hidden">
         <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         
-        <main className="flex-1 relative overflow-y-auto focus:outline-none p-4">
-          <div className="py-3">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none p-2">
+          <div className="py-2">
             {children}
           </div>
         </main>
