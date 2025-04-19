@@ -9,25 +9,30 @@ import NewPrompt from "./pages/NewPrompt";
 import FolderView from "./pages/FolderView";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
+import { PromptDetailProvider } from "./hooks/usePromptDetailModal";
+import PromptDetailModal from "./components/PromptDetailModal";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <div className="w-[400px] h-[600px] overflow-hidden">
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/new-prompt" element={<NewPrompt />} />
-            <Route path="/folder/:folderId" element={<FolderView />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <PromptDetailProvider>
+        <div className="w-[400px] h-[600px] overflow-hidden">
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/new-prompt" element={<NewPrompt />} />
+              <Route path="/folder/:folderId" element={<FolderView />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+          <PromptDetailModal />
+        </div>
+      </PromptDetailProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,8 +1,8 @@
+
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { cn } from '@/lib/utils';
 import { CommandPalette } from '../CommandPalette';
 
 interface MainLayoutProps {
@@ -37,11 +37,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       )}
       
-      <div className="flex flex-col flex-1 w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 w-full overflow-hidden">
         <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         
-        <main className="flex-1 relative overflow-y-auto focus:outline-none p-2">
-          <div className="py-2">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none">
+          <div className="px-2 py-1">
             {children}
           </div>
         </main>

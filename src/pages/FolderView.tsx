@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import PromptCard, { Prompt } from '@/components/PromptCard';
@@ -93,10 +93,10 @@ const FolderView = () => {
   if (!currentFolder) {
     return (
       <MainLayout>
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold">Folder not found</h2>
-          <p className="text-muted-foreground mt-2">The folder you're looking for doesn't exist</p>
-          <Button onClick={() => navigate('/')} className="mt-4">
+        <div className="text-center py-8">
+          <h2 className="text-xl font-bold">Folder not found</h2>
+          <p className="text-muted-foreground mt-2 text-sm">The folder you're looking for doesn't exist</p>
+          <Button onClick={() => navigate('/')} className="mt-4" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to home
           </Button>
@@ -107,13 +107,13 @@ const FolderView = () => {
   
   return (
     <MainLayout>
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Button 
               variant="ghost" 
-              size="sm" 
-              className="mr-2" 
+              size="icon" 
+              className="h-7 w-7 mr-1" 
               onClick={() => navigate('/')}
             >
               <ArrowLeft className="h-4 w-4" />
@@ -122,11 +122,11 @@ const FolderView = () => {
             {searchActive ? (
               <div className="flex items-center">
                 <div className="relative">
-                  <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="h-3.5 w-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Search in this folder..."
-                    className="pl-9 w-[300px]"
+                    className="pl-8 h-8 text-sm w-[200px]"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoFocus
@@ -135,7 +135,7 @@ const FolderView = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6" 
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-5 w-5" 
                       onClick={() => setSearchQuery('')}
                     >
                       <X className="h-3 w-3" />
@@ -146,26 +146,26 @@ const FolderView = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setSearchActive(false)}
-                  className="ml-2"
+                  className="ml-1 h-7 text-xs"
                 >
                   Cancel
                 </Button>
               </div>
             ) : (
               <>
-                <h2 className="text-2xl font-bold">{currentFolder.name}</h2>
+                <h2 className="text-lg font-bold truncate max-w-[180px]">{currentFolder.name}</h2>
                 <Badge 
                   variant="outline" 
-                  className="ml-2"
+                  className="ml-2 h-5 text-xs"
                 >
                   {currentFolder.shared ? (
                     <div className="flex items-center">
-                      <Users className="h-3 w-3 mr-1" />
+                      <Users className="h-2.5 w-2.5 mr-1" />
                       Shared
                     </div>
                   ) : (
                     <div className="flex items-center">
-                      <Lock className="h-3 w-3 mr-1" />
+                      <Lock className="h-2.5 w-2.5 mr-1" />
                       Private
                     </div>
                   )}
@@ -174,35 +174,36 @@ const FolderView = () => {
             )}
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             {!searchActive && (
               <Button 
                 variant="ghost" 
                 size="icon"
+                className="h-7 w-7"
                 onClick={() => setSearchActive(true)}
               >
                 <Search className="h-4 w-4" />
               </Button>
             )}
             
-            <Button onClick={() => navigate('/new-prompt')}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Prompt
+            <Button onClick={() => navigate('/new-prompt')} size="sm" className="h-7">
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              New
             </Button>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="h-7 w-7">
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => toast({ title: "Rename Folder", description: "This would open a dialog to rename the folder" })}>
-                  <PencilLine className="mr-2 h-4 w-4" />
+                  <PencilLine className="mr-2 h-3.5 w-3.5" />
                   <span>Rename Folder</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => toast({ title: "Share Folder", description: "This would open sharing options" })}>
-                  <Share2 className="mr-2 h-4 w-4" />
+                  <Share2 className="mr-2 h-3.5 w-3.5" />
                   <span>Share Folder</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => 
@@ -212,8 +213,8 @@ const FolderView = () => {
                   })
                 }>
                   {currentFolder.shared ? 
-                    <><Lock className="mr-2 h-4 w-4" /><span>Make Private</span></> : 
-                    <><Users className="mr-2 h-4 w-4" /><span>Make Shared</span></>
+                    <><Lock className="mr-2 h-3.5 w-3.5" /><span>Make Private</span></> : 
+                    <><Users className="mr-2 h-3.5 w-3.5" /><span>Make Shared</span></>
                   }
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -225,7 +226,7 @@ const FolderView = () => {
                   })}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <Trash2 className="mr-2 h-3.5 w-3.5" />
                   <span>Delete Folder</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -234,28 +235,28 @@ const FolderView = () => {
         </div>
         
         {currentFolder.description && (
-          <p className="text-muted-foreground">{currentFolder.description}</p>
+          <p className="text-xs text-muted-foreground -mt-1">{currentFolder.description}</p>
         )}
         
         <div>
           {filteredPrompts.length === 0 ? (
             searchQuery ? (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium">No matching prompts</h3>
-                <p className="text-muted-foreground mt-2">Try a different search term</p>
+              <div className="text-center py-8">
+                <h3 className="text-base font-medium">No matching prompts</h3>
+                <p className="text-muted-foreground mt-1 text-sm">Try a different search term</p>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium">No prompts in this folder</h3>
-                <p className="text-muted-foreground mt-2">Add a prompt to get started</p>
-                <Button onClick={() => navigate('/new-prompt')} className="mt-4">
-                  <Plus className="mr-2 h-4 w-4" />
+              <div className="text-center py-8">
+                <h3 className="text-base font-medium">No prompts in this folder</h3>
+                <p className="text-muted-foreground mt-1 text-sm">Add a prompt to get started</p>
+                <Button onClick={() => navigate('/new-prompt')} className="mt-4" size="sm">
+                  <Plus className="mr-2 h-3.5 w-3.5" />
                   New Prompt
                 </Button>
               </div>
             )
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3">
               {filteredPrompts.map((prompt, index) => (
                 <PromptCard 
                   key={prompt.id} 

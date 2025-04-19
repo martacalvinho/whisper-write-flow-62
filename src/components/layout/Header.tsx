@@ -12,14 +12,14 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   
   return (
-    <header className="flex-shrink-0 h-10 flex items-center px-2 border-b bg-card/70 backdrop-blur-sm">
+    <header className="flex-shrink-0 h-9 flex items-center px-2 border-b bg-card/70 backdrop-blur-sm">
       <Button 
         variant="ghost" 
         size="icon" 
         onClick={toggleSidebar}
-        className="h-7 w-7"
+        className="h-6 w-6"
       >
-        <Menu className="h-4 w-4" />
+        <Menu className="h-3.5 w-3.5" />
       </Button>
       
       <div className="flex-1 ml-2">
@@ -29,10 +29,10 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       <Button
         variant="ghost"
         size="icon"
-        className="h-7 w-7"
+        className="h-6 w-6"
         onClick={() => navigate('/new-prompt')}
       >
-        <Plus className="h-4 w-4" />
+        <Plus className="h-3.5 w-3.5" />
       </Button>
     </header>
   );
