@@ -3,18 +3,30 @@ import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, FolderPlus, Search, Tag } from 'lucide-react';
+import { 
+  Plus, 
+  FolderPlus, 
+  Search, 
+  Tag,
+  ChevronDown,
+  ChevronUp
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PromptCard, { Prompt } from '@/components/PromptCard';
 import FolderGrid from '@/components/FolderGrid';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const Index = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [showAllTags, setShowAllTags] = useState(false);
   
-  // Mock data - in a real app this would come from API or state management
   const folders = [
     { id: '1', name: 'ChatGPT Templates', count: 12, shared: false },
     { id: '2', name: 'Claude Prompts', count: 8, shared: true },
@@ -74,12 +86,10 @@ const Index = () => {
     },
   ];
 
-  // Get all unique tags from prompts
   const allTags = Array.from(
     new Set(prompts.flatMap(prompt => prompt.tags))
   ).sort();
 
-  // Filter prompts based on search query and selected tags
   const filteredPrompts = prompts.filter(prompt => {
     const matchesSearch = searchQuery.toLowerCase() === '' || 
       prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -98,7 +108,7 @@ const Index = () => {
         : [...prev, tag]
     );
   };
-  
+
   return (
     <MainLayout>
       <div className="space-y-6">
@@ -121,35 +131,6 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search prompts..."
-                className="pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {allTags.map(tag => (
-              <Badge
-                key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "outline"}
-                className="cursor-pointer"
-                onClick={() => toggleTag(tag)}
-              >
-                <Tag className="mr-1 h-3 w-3" />
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-        
         <Tabs defaultValue="folders" className="w-full">
           <TabsList>
             <TabsTrigger value="folders">Folders</TabsTrigger>
@@ -162,13 +143,74 @@ const Index = () => {
           
           <TabsContent value="prompts" className="mt-6">
             <div className="space-y-4">
-              {filteredPrompts.map((prompt) => (
-                <PromptCard 
-                  key={prompt.id} 
-                  prompt={prompt}
-                  className="w-full"
-                />
-              ))}
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search prompts..."
+                    className="pl-8"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <Collapsible>
+                <div className="flex items-center gap-2">
+                  <CollapsibleTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Tag className="h-4 w-4 mr-2" />
+                      Select Tags
+                      {showAllTags ? (
+                        <ChevronUp className="h-4 w-4 ml-2" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 ml-2" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  {selectedTags.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto">
+                      {selectedTags.map(tag => (
+                        <Badge
+                          key={tag}
+                          variant="default"
+                          className="cursor-pointer"
+                          onClick={() => toggleTag(tag)}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <CollapsibleContent className="mt-2">
+                  <div className="flex flex-wrap gap-2">
+                    {allTags.map(tag => (
+                      <Badge
+                        key={tag}
+                        variant={selectedTags.includes(tag) ? "default" : "outline"}
+                        className="cursor-pointer"
+                        onClick={() => toggleTag(tag)}
+                      >
+                        <Tag className="mr-1 h-3 w-3" />
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              <div className="space-y-4">
+                {filteredPrompts.map((prompt) => (
+                  <PromptCard 
+                    key={prompt.id} 
+                    prompt={prompt}
+                    className="w-full"
+                  />
+                ))}
+              </div>
             </div>
           </TabsContent>
         </Tabs>
